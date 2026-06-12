@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rendimientos y Costos ADA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Agricola Don Adolfo</p>
+          <h1>Rendimientos y costos diarios en una sola vista</h1>
+          <p class="hero-text">
+            Prototipo movil para consultar mano de obra, diesel, avances por cuadro y alertas operativas sin depender de PDF o WhatsApp.
+          </p>
+        </div>
+        <div class="hero-panel">
+          <label class="field-label" for="report-date">Fecha del reporte</label>
+          <select id="report-date" class="date-select"></select>
+          <p class="hero-note" id="hero-note"></p>
+        </div>
+      </header>
+
+      <main class="content-grid">
+        <section class="card card-kpis">
+          <div class="section-head">
+            <p class="section-kicker">Resumen</p>
+            <h2>KPIs del dia</h2>
+          </div>
+          <div id="kpi-grid" class="kpi-grid"></div>
+        </section>
+
+        <section class="card card-alerts">
+          <div class="section-head">
+            <p class="section-kicker">Lectura rapida</p>
+            <h2>Variaciones que piden atencion</h2>
+          </div>
+          <div id="alerts-list" class="stack-list"></div>
+        </section>
+
+        <section class="card card-questions">
+          <div class="section-head">
+            <p class="section-kicker">Seguimiento</p>
+            <h2>Preguntas operativas del dia</h2>
+          </div>
+          <div id="questions-list" class="stack-list"></div>
+        </section>
+
+        <section class="card card-tabs">
+          <div class="section-head">
+            <p class="section-kicker">Consulta</p>
+            <h2>Detalle del reporte</h2>
+          </div>
+          <div class="tabbar" id="tabbar">
+            <button class="tab-button is-active" data-tab="labor">Mano de obra</button>
+            <button class="tab-button" data-tab="diesel">Diesel</button>
+            <button class="tab-button" data-tab="tractor">Acumulado tractores</button>
+            <button class="tab-button" data-tab="laborProgress">Acumulado jornales</button>
+          </div>
+
+          <div class="tab-panel is-active" id="tab-labor">
+            <div id="labor-table" class="table-wrap"></div>
+          </div>
+
+          <div class="tab-panel" id="tab-diesel">
+            <div id="diesel-table" class="table-wrap"></div>
+          </div>
+
+          <div class="tab-panel" id="tab-tractor">
+            <div id="tractor-progress" class="progress-grid"></div>
+          </div>
+
+          <div class="tab-panel" id="tab-laborProgress">
+            <div id="labor-progress" class="progress-grid"></div>
+          </div>
+        </section>
+
+        <section class="card card-highlights">
+          <div class="section-head">
+            <p class="section-kicker">Prioridades</p>
+            <h2>Top costos del dia</h2>
+          </div>
+          <div class="mini-columns">
+            <div>
+              <h3>Mano de obra</h3>
+              <div id="top-labor-list" class="stack-list compact"></div>
+            </div>
+            <div>
+              <h3>Diesel</h3>
+              <div id="top-diesel-list" class="stack-list compact"></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
