@@ -1,5 +1,6 @@
 const state = {
-  payload: null,
+  index: null,
+  reportCache: new Map(),
   currentDate: null,
 };
 
@@ -18,8 +19,24 @@ const num = (value, digits = 2) =>
 
 const pct = (value) => `${num(value, 1)}%`;
 
-function getReport() {
-  return state.payload.reports.find((report) => report.date === state.currentDate);
+function getDateEntry(date) {
+  return state.index.dates.find((entry) => entry.date === date);
+}
+
+async function getReport(date) {
+  if (state.reportCache.has(date)) {
+    return state.reportCache.get(date);
+  }
+
+  const entry = getDateEntry(date);
+  if (!entry) {
+    return null;
+  }
+
+  const response = await fetch(entry.file, { cache: "no-store" });
+  const report = await response.json();
+  state.reportCache.set(date, report);
+  return report;
 }
 
 function renderKpis(report) {
@@ -233,11 +250,11 @@ function renderHighlights(report) {
     .join("");
 }
 
-function renderReport() {
-  const report = getReport();
+async function renderReport() {
+  const report = await getReport(state.currentDate);
   if (!report) return;
 
-  document.querySelector("#hero-note").textContent = `Ultima fecha visible: ${state.payload.meta.latest_date}. Actualmente viendo ${report.date}.`;
+  document.querySelector("#hero-note").textContent = `Ultima fecha visible: ${state.index.meta.latest_date}. Actualmente viendo ${report.date}.`;
   renderKpis(report);
   renderAlerts(report);
   renderQuestions(report);
@@ -264,23 +281,23 @@ function bindTabs() {
 
 function bindDateSelector() {
   const select = document.querySelector("#report-date");
-  select.innerHTML = state.payload.meta.dates_available
+  select.innerHTML = state.index.meta.dates_available
     .map((date) => `<option value="${date}">${date}</option>`)
     .join("");
   select.value = state.currentDate;
-  select.addEventListener("change", (event) => {
+  select.addEventListener("change", async (event) => {
     state.currentDate = event.target.value;
-    renderReport();
+    await renderReport();
   });
 }
 
 async function init() {
-  const response = await fetch("./data/dashboard-data.json");
-  state.payload = await response.json();
-  state.currentDate = state.payload.meta.latest_date;
+  const response = await fetch("./data/index.json", { cache: "no-store" });
+  state.index = await response.json();
+  state.currentDate = state.index.meta.latest_date;
   bindDateSelector();
   bindTabs();
-  renderReport();
+  await renderReport();
 }
 
 init();
